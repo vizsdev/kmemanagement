@@ -1,0 +1,120 @@
+{% extends "layout/base.html" %}
+
+{% block title %} KME {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="row text-right">
+                  <div class="col-12">
+                   <form action="{% url 'add_Designation' %}" method="get" target="{% url 'add_Designation' %}">
+                      <button type="submit" class="btn btn-primary" title="Create new " data-toggle="tooltip"> Designate new record </button>
+                   </form>
+                </div>
+                 <!-- [ breadcrumb ] start -->
+                 <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="{% url 'index_designation' %}">Designation</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+ <!-- [ breadcrumb ] end -->
+              </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Defining  from companies declared in views.py -->
+                    <br>
+                <h3> Designation List </h3>
+                <br>
+                    <!-- Defining  from companies declared in views.py -->
+                    {%if designations %}
+                    <div class="card border-primary ms-4 me-4 mb-4">
+                        <div class="card-body">
+                          <p class="card-text">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Employee Name</th>
+                                        <th scope="col">Role</th>
+                                        <th scope="col">Start</th>
+                                        <th scope="col">End</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Defining company from companies declared in views.py -->
+                                        {% for designation in designations %}
+                                        <tr>
+                                            <td>{{designation.designation_employee.employee_fullname}}</td>
+                                            <td>{{designation.designation_role.role_name}}</td>
+                                            <td>{{designation.designation_start}}</td>
+                                            <td>{{designation.designation_end}}</td>
+
+                                            <td class="text-right">
+                                            
+                                              <button type="button" class="btn btn-success"><a href="{% url 'edit_Designation' designation.designation_id %}" style="text-decoration:none" class="text-white">Edit</a></button>
+                                              <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#myModaldeletedesignation{{designation.designation_id }}">Delete</button>
+                                              <!-- Modal action here for info -->
+                                              
+                                              <div class="modal fade" id="myModaldeletedesignation{{designation.designation_id }}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title">{{designation.designation_name}}</h5><hr>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true"></span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <p>Are you sure you want to delete {{designation.designation_}} associated to  {{designation.designation_role}} ? </p>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <form action="{% url 'delete_Employee' designation.designation_id %}" method="POST">
+                                                          {% csrf_token %}
+                                                        <input type="submit" class="btn btn-primary" value="Delete">
+                                                        </form>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                  </table>
+                            </div>
+                            {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                            {% endfor %}
+                            {% endif %}
+                          </p>
+                        </div>
+                    </div>
+                    {% else %}
+                     <h5 class="alert alert-primary ms-4 me-4">No Records Found</h5> 
+                    {% endif %}
+                </div>
+            </div>
+{% endblock  %}

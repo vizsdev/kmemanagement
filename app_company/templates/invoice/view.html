@@ -1,0 +1,304 @@
+{% extends "layout/base.html" %}
+
+{% block title %} KME {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% load humanize %}
+
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="row text-right">
+                  <div class="col-12">
+                   <form action="{% url 'index_invoice' %}" method="get" target="{% url 'index_invoice' %}">
+                      <button type="submit" class="btn btn-primary" title="View invoice" data-toggle="tooltip"> Back to list of invoice </button>
+                   </form>
+                   {% comment %} <form action="{% url 'add_invoice' %}" method="get" target="{% url 'add_invoice' %}">
+                    <button type="submit" class="btn btn-primary" title="Create new invoice" data-toggle="tooltip"> Create new invoice </button>
+                    </form> {% endcomment %}
+                </div>
+                 <!-- [ breadcrumb ] start -->
+                 <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="{% url 'index_invoice' %}">Invoices</a></li>
+                                  <li class="breadcrumb-item"><a>Details</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+ <!-- [ breadcrumb ] end -->
+              </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Defining  from companies declared in views.py -->
+                    <br>
+                <h3> Customer PO: {{invoice.invoice_customer_po}} </h3>
+                <br>
+                    <!-- Defining  from companies declared in views.py -->
+              
+                    <div class="main-body">
+                        <div class="page-wrapper">
+                            <!-- [ Main Content ] start -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Invoice No  : {{invoice.invoice_number}}</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <form>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Order Quantity:</b></label>
+                                                            <p> {{invoice.invoice_order_quantity|intcomma}} </p>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>FOC Quantity:</b></label>
+                                                            <p> {{invoice.invoice_foc_quantity|intcomma}}    </p>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>FOC %:</b></label>
+                                                            <p> {{invoice.invoice_foc_percentage|intcomma}}%  </p>
+                                                        </div>
+                                                   </form>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <form>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Unit Price in USD:</b></label>
+                                                            <p>${{invoice.invoice_unit_price|intcomma}}  </p>
+                                                        </div>  
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Net Value:</b></label>
+                                                            <p> {{invoice.invoice_net_value|intcomma}}   </p>
+                                                        </div>
+                                                        
+                                                    </form>
+                                                </div>
+
+                                            </hr>
+
+                                                <div class="col-md-6">
+                                                    <form>
+                                                        <h3> Dates </h3><br>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Issue Date:</b></label>
+                                                            <p> {{invoice.invoice_issue_date|date:"M d, Y"}}  </p>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Deivery Due Date </b>:  <span> {{invoice.invoice_delivery_due_date|date:"M d, Y"}}</span> </label>
+                                                            <br>
+                                                            <label for="orderquantity"><b>Status </b>: 
+                                                                {% if invoice.invoice_delivery_due_date_status == "Pending" %} <span class="text-danger">{{invoice.invoice_delivery_due_date_status}} </span></label>
+                                                                {% else %} <span class="text-success">{{invoice.invoice_delivery_due_date_status}} </span></label>{% endif %}
+                                                            <p><a href="{% url 'edit_dsu' invoice.invoice_id %}" class="label theme-bg text-white f-12">Update</a></p>
+                                                           
+                                                        </td>
+                                                            <div class="progress">
+                                                                <div id="duedateprogress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow={{invoice.get_delivery_due_progress}} aria-valuemin="0" aria-valuemax={{invoice.get_delivery_total_days}} style="width:0%"></div>   
+                                                                {% comment %} <p>{{invoice.get_delivery_due_progress}}</p> {% endcomment %}
+                                                            </div>
+                                                        </div>
+                                                        <br>
+
+
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>MRA Date:</b>   <span> {{invoice.invoice_mra_date|date:"M d, Y"}} </span>
+                                                            <br>
+                                                            <label for="orderquantity"><b>Status </b>: 
+                                                                {% if invoice.invoice_mra_date_status == "Pending" %} <span class="text-danger">{{invoice.invoice_mra_date_status}} </span></label>
+                                                                {% else %} <span class="text-success">{{invoice.invoice_mra_date_status}} </span></label>{% endif %}
+                                                           
+                                                            <p><a href="{% url 'edit_mrau' invoice.invoice_id %}" class="label theme-bg text-white f-12">Update</a></p>
+
+                                                            <div class="progress">
+                                                                <div id="mradateprogress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow={{invoice.get_delivery_due_progress}} aria-valuemin="0" aria-valuemax={{invoice.get_delivery_total_days}} style="width:0%" ></div>   
+                                                                {% comment %} <p>{{invoice.get_delivery_due_progress}}</p> {% endcomment %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>PAC Date: </b><span> {{invoice.invoice_pac_date|date:"M d, Y"}} </span>
+                                                                <br>
+                                                                <label for="orderquantity"><b>Status </b>: 
+                                                                    {% if invoice.invoice_pac_date_status == "Pending" %} <span class="text-danger">{{invoice.invoice_pac_date_status}} </span></label>
+                                                                    {% else %} <span class="text-success">{{invoice.invoice_pac_date_status}} </span></label>{% endif %}
+                                                                <p><a href="{% url 'edit_pacu' invoice.invoice_id %}" class="label theme-bg text-white f-12">Update</a></p>
+                                                            <div class="progress">
+                                                                <div id="pacdateprogress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow={{invoice.get_delivery_due_progress}} aria-valuemin="0" aria-valuemax={{invoice.get_delivery_total_days}} style="width:0%" ></div>   
+                                                                {% comment %} <p>{{invoice.get_delivery_due_progress}}</p> {% endcomment %}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b>Finance Date</b><span> {{invoice.invoice_finance_date|date:"M d, Y"}} </span>
+                                                                <br>
+                                                                <label for="orderquantity"><b>Status </b>: 
+                                                                    {% if invoice.invoice_finance_date_status == "Pending" %} <span class="text-danger">{{invoice.invoice_finance_date_status}} </span></label>
+                                                                    {% else %} <span class="text-success">{{invoice.invoice_finance_date_status}} </span></label>{% endif %}
+                                                                <p><a href="{% url 'edit_finu' invoice.invoice_id %}" class="label theme-bg text-white f-12">Update</a></p>
+                                                            <div class="progress">
+                                                                <div id="financedateprogress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow={{invoice.get_delivery_due_progress}} aria-valuemin="0" aria-valuemax={{invoice.get_delivery_total_days}} style="width:0%" ></div>   
+                                                                {% comment %} <p>{{invoice.get_delivery_due_progress}}</p> {% endcomment %}
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <form>
+                                                        <br>
+                                                        <h3> Supporting Documents </h3>
+                                                        {% if invoice.invoice_document_0 == ''%}
+
+                                                        {% else %}
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b> Document #1:</b></label>
+                                                           <p> <a href="/media/{{invoice.invoice_document_0}}" target="_blank">{{invoice.invoice_document_0}}</a></p>
+                                                        </div>
+                                                        {% endif %}
+                                                        {% if invoice.invoice_document_1 == ''%}
+
+                                                        {% else %}
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b> Document #2:</b></label>
+                                                            <p> <a href="/media/{{invoice.invoice_document_1}}" target="_blank">{{invoice.invoice_document_1}}</a></p>
+                                                        </div>
+                                                        {% endif %}
+
+                                                        {% if invoice.invoice_document_2 == ''%}
+
+                                                        {% else %}
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b> Document #3:</b></label>
+                                                            <p><a href="/media/{{invoice.invoice_document_2}}" target="_blank">{{invoice.invoice_document_2}}</a></p>
+                                                        </div>
+                                                        {% endif %}
+                                                        {% if invoice.invoice_document_3 == ''%}
+
+                                                        {% else %}
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b> Document #4:</b></label>
+                                                            <p><a href="/media/{{invoice.invoice_document_3}}" target="_blank">{{invoice.invoice_document_3}}</a></p>
+                                                        </div>
+                                                        {% endif %}
+                                                    
+                                                        {% if invoice.invoice_document_4 == ''%}
+
+                                                        {% else %}
+                                                        <div class="form-group">
+                                                            <label for="orderquantity"><b> Document #5:</b></label>
+                                                            <p><a href="/media/{{invoice.invoice_document_4}}" target="_blank">{{invoice.invoice_document_4}}</a></p>
+                                                        </div>
+                                                        {% endif %}
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <script type="text/javascript">
+                    var a = {{invoice.get_delivery_due_progress}}
+                      window.onload = function(){
+                        if (a >= 80){
+                        document.getElementById("duedateprogress").style.width = a + "%";
+                        document.getElementById("duedateprogress").style.backgroundColor = "red";
+                        
+                        document.getElementById("mradateprogress").style.width = a + "%";
+                        document.getElementById("mradateprogress").style.backgroundColor = "red";
+
+                        document.getElementById("pacdateprogress").style.width = a + "%";
+                        document.getElementById("pacdateprogress").style.backgroundColor = "red";
+                      
+                        document.getElementById("financedateprogress").style.width = a + "%";
+                        document.getElementById("financedateprogress").style.backgroundColor = "red";
+                      
+
+                        } else if (a >= 50) {
+                        document.getElementById("duedateprogress").style.width = a + "%";
+                        document.getElementById("duedateprogress").style.backgroundColor = "orange";
+                       
+                        document.getElementById("mradateprogress").style.width = a + "%";
+                        document.getElementById("mradateprogress").style.backgroundColor = "orange";
+                     
+                        document.getElementById("pacdateprogress").style.width = a + "%";
+                        document.getElementById("pacdateprogress").style.backgroundColor = "orange";
+                      
+                        document.getElementById("financedateprogress").style.width = a + "%";
+                        document.getElementById("financedateprogress").style.backgroundColor = "orange";
+                      
+                        }else {
+                        document.getElementById("duedateprogress").style.width = a + "%";
+                        
+                        document.getElementById("mradateprogress").style.width = a + "%";
+                      
+                        document.getElementById("pacdateprogress").style.width = a + "%";
+                      
+                        document.getElementById("financedateprogress").style.width = a + "%";
+                      
+                        }
+                    };
+
+                </script>
+
+{% comment %} 
+                <script type="text/javascript">
+                    var a = {{invoice.get_delivery_due_progress}}
+                      window.onload = function(){
+                        if (a >= 80){
+                         } else if (a >= 50) {
+                          }else {
+                         }
+                    };
+
+                </script>
+
+
+                <script type="text/javascript">
+                    var a = {{invoice.get_delivery_due_progress}}
+                      window.onload = function(){
+                        if (a >= 80){
+                         } else if (a >= 50) {
+                        }else {
+                        }
+                    };
+
+                </script>
+
+                <script type="text/javascript">
+                    var a = {{invoice.get_delivery_due_progress}}
+                      window.onload = function(){
+                        if (a >= 80){
+                        } else if (a >= 50) {
+                         }else {
+                        }
+                    };
+
+                </script> {% endcomment %}
+            
+{% endblock  %}
+

@@ -1,0 +1,109 @@
+{%load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="{%static 'css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="{%static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{%static 'css/custom.css' %}" rel="stylesheet">
+        <title>Kaon Management System</title>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <main>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href={% url 'index_company' %}><img src="/static/images/KAON.png" class="logo"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarColor03">
+                <ul class="navbar-nav me-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="#">Home
+                      <span class="visually-hidden">(current)</span>
+                    </a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href={% url 'index_company' %} role="button" aria-haspopup="true" aria-expanded="false">Companies</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href={% url 'index_company' %}>View company</a>
+                      <a class="dropdown-item" href={% url 'add_company' %}>Create new company</a>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Separated link</a> -->
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Employees</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href={% url 'index_employee' %}>View Employees</a>
+                      <a class="dropdown-item" href={% url 'add_Employee' %}>Enroll employee</a>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Separated link</a> -->
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Departments</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Create new department</a>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Separated link</a> -->
+                    </div>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Roles</a>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href={% url 'index_role' %}>View role</a>
+                      <a class="dropdown-item" href={% url 'add_role' %}>Add new role</a>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" href="#">Separated link</a> -->
+                    </div>
+                  </li>
+                  
+                </ul>
+                <form class="d-flex">
+                <ul class="navbar-nav me-auto">
+                  {% if user.is_authenticated %}
+                      <li class="nav-item list-unstyled">
+                        <a class="nav-link nav-item" href= {% url 'logout_user' %}> Logout </a>
+                      </li>
+                  {% else %}
+                      <li class="nav-item list-unstyled">
+                        <a class="nav-link nav-item" href= {% url 'login_user' %}> Login </a>
+                      </li>
+                  {% endif %}
+               
+                </ul>
+                  <input class="form-control me-sm-2" type="search" placeholder="Search">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+                </form>
+              </div>
+            </div>
+        </nav>
+          <!-- End of Navigation Bar -->
+          <br><br>
+          <div class="container-fluid">
+           {% block body %}
+          
+           {% endblock %}
+          </div> 
+        </main>
+    </body>
+     <footer class="mt-auto mb-4">
+        <div class="text-center">
+            <span>Copyright &copy<script>document.write(new Date().getFullYear())</script> by Kaon Middle East FZE.</span>
+      
+        </div>
+     </footer>
+    
+        <script src="http://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/js/all.min.js"></script>
+        <script src="https://kit.fontawesome.com/5d29bdf30d.js" crossorigin="anonymous"></script>
+         <!-- Custom Script -->
+
+     <script> 
+        const myInput = document.getElementById('#myModal{{company_company.id}}')
+        myModal.addEventListener('shown.bs.modal', () => {
+          myInput.focus()
+        })</script>
+</html>

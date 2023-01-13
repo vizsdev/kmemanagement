@@ -1,0 +1,87 @@
+.logo{
+height: auto;
+width: 20px;
+}
+
+.read{
+    pointer-events: none;
+}
+
+select.read{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+  }
+
+
+.empinfo > ul>li {
+    padding: 10px;
+    border-style: inset;
+    border-width: 1px;
+    
+}
+
+
+.empinfo > ul > li> .emppp{
+
+    height: auto;
+    width: 100px;
+    align-content: center;
+}
+
+
+.theme-bg-danger {
+    border: 2px solid;
+    border-image-slice: 1;
+    border-width: 2px;
+    border-image-source: linear-gradient(to left, red, rgba(0, 0, 0, 0)) 1 100%;
+    
+  }
+  
+  .theme-bg-warning {
+    border: 2px solid;
+    border-image-slice: 1;
+    border-width: 2px;
+    border-image-source: linear-gradient(to left, rgb(244, 121, 14), rgba(0, 0, 0, 0)) 1 100%;
+  } 
+  
+  
+  .theme-bg-success {
+    border-image-source: linear-gradient(to left, #00C853, #B2FF59);
+    border: 2px solid;
+    border-image-slice: 1;
+    border-width: 2px;
+    
+  }
+
+
+
+  span.theme-bg-danger {
+    border: 2px dashed;
+    border-image-slice: 1;
+    border-width: 2px;
+    border-image-source: linear-gradient(to left, red, rgba(0, 0, 0, 0)) 1 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
+  span .theme-bg-warning {
+    border: 2px dashed;
+    border-image-slice: 1;
+    border-width: 2px;
+    border-image-source: linear-gradient(to left, rgb(244, 121, 14), rgba(0, 0, 0, 0)) 1 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+  } 
+  
+  
+  span.theme-bg-success {
+    border-image-source: linear-gradient(to left, #00C853, #B2FF59);
+    border: 2px dashed;
+    border-image-slice: 1;
+    border-width: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    
+  }

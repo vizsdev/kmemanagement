@@ -1,0 +1,157 @@
+{% extends "layout/base.html" %}
+{% block title %} KME {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% comment %} {% block body %} {% endcomment %}
+{% load countries %}
+{% load custom_tags %}
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="row text-right">
+                  <div class="col-12">
+                   <form action="{% url 'add_Employee' %}" method="get" target="{% url 'add_Employee' %}">
+                      <button type="submit" class="btn btn-primary" title="Create new employee" data-toggle="tooltip"> Enroll new employee </button>
+                   </form>
+                </div>
+                 <!-- [ breadcrumb ] start -->
+                 <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="{% url 'index_company' %}">Employees</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+ <!-- [ breadcrumb ] end -->
+              </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Defining  from companies declared in views.py -->
+                    <br>
+                <h3> List of Employees </h3>
+                <br>
+                    <!-- Defining  from companies declared in views.py -->
+                    {%if employees %}
+                    <div class="card border-primary ms-4 me-4 mb-4">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Employee Name</th>
+                                        <th scope="col">Emirates ID</th>
+                                        <th scope="col">Emirates ID Expiry</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Defining company from companies declared in views.py -->
+                                        {% for employee in employees %}
+                                        <tr>
+                                          {% if employee.eid_expired %}
+                                          <td>{{employee.employee_fullname}}</td>
+                                          <td>{{employee.employee_eid}}</td>
+                                          <td><p class="label theme-bg-danger text-danger f-12">Expired On: {{employee.employee_eid_exp|date:"M d, Y"}} </p></td>
+                                          {% elif employee.eid_expiring %}                                          
+                                          <td>{{employee.employee_fullname}}</td>
+                                          <td>{{employee.employee_eid}}</td>
+                                          <td><p class="label theme-bg-warning text-warning f-12">Expiring On: {{employee.employee_eid_exp|date:"M d, Y" }}</p></td>
+                                          {% else %}   
+                                          <td>{{employee.employee_fullname}}</td>
+                                          <td>{{employee.employee_eid}}</td>
+                                          <td><p class="label theme-bg-success text-success f-12">Valid until: {{employee.employee_eid_exp|date:"M d, Y"}} </p></td>   
+                                          {% endif %}
+                                            
+                                            <td class="text-right">
+                                              <button type="button" class="btn btn-success" href="{% url 'view_employee' employee.employee_id %}" data-bs-toggle="modal" data-bs-target="#myModalEmployeeInfo{{employee.employee_id}}" style="cursor:help">View more info</button>
+                                              <button type="button" class="btn btn-success"><a href="{% url 'edit_Employee' employee.employee_id %}" style="text-decoration:none" class="text-white">Edit</a></button>
+                                              <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#myModaldeleteemployee{{employee.employee_id }}">Delete</button>
+                                              <!-- Modal action here for info -->
+                                              
+                                              <div class="modal fade bd-example-modal-lg" id="myModaldeleteemployee{{employee.employee_id }}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title">Deleting {{employee.employee_fullname}}</h5><hr>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true"></span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body text-left">
+                                                        <p>Are you sure you want to delete this record? </p>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <form action="{% url 'delete_Employee' employee.employee_id %}" method="POST">
+                                                          {% csrf_token %}
+                                                        <input type="submit" class="btn btn-primary" value="Delete">
+                                                        </form>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+
+                                                <div class="modal fade bd-example-modal-lg" id="myModalEmployeeInfo{{employee.employee_id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header text-center">
+                                                        <h4 class="modal-title ">{{employee.employee_fullname}}</h4 ><hr>
+                                                      </div>
+                                                      <div class="modal-body text-left empinfo">
+                                                         <ul class="list-unstyled">
+                                                              <li class="text-center"><img src="/media/{{employee.employee_photo}}" class="emppp"></li>
+                                                              <li><b>Birth:</b> {{employee.employee_birth}}</li>
+                                                              <li><b>Gender:</b> {{employee.employee_gender}}</li>
+                                                              <li><b>Nationality:</b> {{employee.employee_nationality.name}} <img src="{{employee.employee_nationality.flag}}"></li>
+                                                              <li><b>Passport Number:</b> {{employee.employee_passport}}</li>
+                                                              {% comment %} <li class="text-danger"><b>Passport Expiry:</b> {{employee.employee_passport_exp}}</li> {% endcomment %}
+                                                              <li><b>Passport Expiry:</b> {{employee.employee_passport_exp}}</li>
+                                                              <li><b>Emirates ID:</b> {{employee.employee_eid}}</li>
+                                                              <li><b>Emirates ID Expiry:</b> {{employee.employee_eid}}</li>
+                                                              <li><b>Visa:</b> {{employee.employee_visa}}</li>
+                                                              <li><b>Visa Expiry:</b> {{employee.employee_visa_exp}}</li>
+                                                          </ul> 
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                  </table>
+                            </div>
+                            {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                            {% endfor %}
+                            {% endif %}
+                          </p>
+                        </div>
+                    </div>
+                    {% else %}
+                     <h5 class="alert alert-primary ms-4 me-4">No Records Found</h5> 
+                    {% endif %}
+                </div>
+            </div>
+{% endblock  %}

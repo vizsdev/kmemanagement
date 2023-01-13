@@ -1,0 +1,65 @@
+{% extends "layout/base.html" %}
+
+{% block title %} KME {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+<div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="page-header">
+                    <div class="page-block">
+                        <div class="row align-items-center">
+                            <div class="col-md-12">
+                                <div class="page-header-title">
+                                </div>
+                                <ul class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="{% url 'index_designation' %}">Designation</a></li>
+                                    <li class="breadcrumb-item"><a href="javascript:">Edit</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+   <!-- [ breadcrumb ] end -->
+   <div class="main-body">
+    <div class="page-wrapper">
+        <!-- [ Main Content ] start -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Editting Designation Records</h5>
+                    </div>
+    {% if success %}
+        <div class="alert alert-success" role="alert"> 
+        The new record has been successfully added
+        <a href="{%url 'index_designation' %}" class="alert-link"> Go to designation records. </a>
+        </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-6">
+                <div class="form-group">
+                    <div class="card-body">
+                      <form action="" method="POST">
+                       {% csrf_token %}   {% comment %} cross site request forgery {% endcomment %}
+                        {{form.as_p}}
+                        <button type="submit" class="btn btn-primary" title="Update" data-toggle="tooltip"> Update </button>
+                        <a href={% url 'index_designation' %} class="btn btn-secondary">Cancel</a>
+                      </form>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+    {% endif %}
+{% endblock content %}

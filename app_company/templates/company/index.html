@@ -1,0 +1,149 @@
+
+  
+{% extends "layout/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="row text-right">
+                  <div class="col-12">
+                   <form action="{% url 'add_company' %}" method="get" target="{% url 'add_company' %}">
+                      <button type="submit" class="btn btn-primary" title="Create new company" data-toggle="tooltip"> Create new company </button>
+                   </form>
+                </div>
+                 <!-- [ breadcrumb ] start -->
+                 <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="{% url 'index_company' %}">Companies</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+ <!-- [ breadcrumb ] end -->
+              </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Defining  from companies declared in views.py -->
+                    <br>
+                <h3> List of Companies </h3>
+                <br>
+                    {%if companies %}
+                    <div class="card border-primary ms-4 me-4 mb-4">
+                   
+                        <div class="card-body">
+                          <p class="card-text">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Company Name</th>
+                                        <th scope="col">Location</th>
+                                        <th scope="col">Address</th>
+                                        <th scope="col">Year Established</th>
+                                        <th scope="col">Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Defining company from companies declared in views.py -->
+                                        {% for company in companies %}
+                                        <tr class="justify-content-center">
+                                            <td>{{company.company_name}}</td>
+                                            <td>{{company.company_location.name}} <img src="{{company.company_location.flag}}"></td>
+                                            <td>{{company.company_address}}</td>
+                                            <td>{{company.company_est|date:"M d, Y"}}</td>
+                                            <td>
+                                                <button type="button" class="btn btn-success" href="{% url 'view_company' company.company_id %}" data-bs-toggle="modal" data-bs-target="#myModalCompanyInfo{{company.company_id}}" style="cursor:help">View more info</button>
+                                                <button type="button" class="btn btn-success"><a href="{% url 'edit_company' company.company_id %}" style="text-decoration:none" class="text-white">Edit</a></button>
+                                                <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#myModaldelete{{company.company_id}}">Delete</button>
+                                                <!-- Modal action here for info -->
+                                                
+                                                <div class="modal fade" id="myModaldelete{{company.company_id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                      <div class="modal-content">
+                                                        <div class="modal-header">
+                                                          <h5 class="modal-title">{{company.company_name}}</h5><hr>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                          <p>Are you sure you want to delete {{company.company_name}} ? </p>
+                                                            {% comment %} <ul class="list-unstyled">
+                                                                <li><b>Date Established:</b>{{company.company_est}}</li>
+                                                                <li><b>Location:</b> {{company.company_location}}</li>
+                                                            </ul> {% endcomment %}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                          <form action="{% url 'delete_company' company.company_id %}" method="POST">
+                                                            {% csrf_token %}
+                                                          <input type="submit" class="btn btn-primary" value="Delete">
+                                                          </form>
+                                                          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                                <div class="modal fade" id="myModalCompanyInfo{{company.company_id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title">{{company.company_name}}</h5><hr>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                         <ul class="list-unstyled">
+                                                              <li><b>Date Established:</b>{{company.company_est|date:"M d, Y"}}</li>
+                                                              <li><b>Location:</b> {{company.company_location}}</li>
+                                                          </ul> 
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                  </table>
+                            </div>
+                            {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+                            {% endfor %}
+                            {% endif %}
+                          </p>
+                        </div>
+                    </div>
+                    {% else %}
+                     <h5 class="alert alert-primary ms-4 me-4">No Records Found</h5> 
+                    {% endif %}
+                </div>
+            </div>
+{% endblock content%}
+{% block javascripts %}{% endblock javascripts %}

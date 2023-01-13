@@ -1,0 +1,180 @@
+{% extends "layout/base.html" %}
+
+{% block title %} KME {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% comment %} {% block body %} {% endcomment %}
+
+{% block content %}
+  <!-- [ Main Content ] start -->
+  <div class="pcoded-main-container">
+    <div class="pcoded-wrapper">
+        <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- [ breadcrumb ] start -->
+                <div class="row text-right">
+                  <div class="col-12">
+                   <form action="{% url 'add_invoice' %}" method="get" target="{% url 'add_invoice' %}">
+                      <button type="submit" class="btn btn-primary" title="Create new invoice" data-toggle="tooltip"> Create new Invoice </button>
+                   </form>
+                </div>
+                 <!-- [ breadcrumb ] start -->
+                 <div class="page-header">
+                  <div class="page-block">
+                      <div class="row align-items-center">
+                          <div class="col-md-12">
+                              <div class="page-header-title">
+                              </div>
+                              <ul class="breadcrumb">
+                                  <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
+                                  <li class="breadcrumb-item"><a href="{% url 'index_invoice' %}">Invoices</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+ <!-- [ breadcrumb ] end -->
+              </div>
+                <!-- [ breadcrumb ] end -->
+                <div class="main-body">
+                    <div class="page-wrapper">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Defining  from companies declared in views.py -->
+                    <br>
+                <h3> List of Invoices </h3>
+                <br>
+                    <!-- Defining  from companies declared in views.py -->
+                    {%if invoice %}
+                    <div class="card border-primary ms-4 me-4 mb-4">
+                        <div class="card-body">
+                          {% if messages %}
+                          {% for message in messages %}
+                              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" invoice="alert">{{ message }}</div>
+                          {% endfor %}
+                          {% endif %}
+                          <p class="card-text">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Invoice Number</th>
+                                        <th scope="col">Customer Po</th>
+                                        <th scope="col">Delivery Due Date / Status</th>   
+                                        <th scope="col">MRA Date / Status</th>
+                                        <th scope="col">PAC Date / Status</th>
+                                        <th scope="col">Finance Date / Status</th>
+                                    
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Defining invoice from invoices declared in views.py -->
+                                        {% for invoice in invoice %}
+                                        <tr>
+                                            <td>{{invoice.invoice_number}}</td>
+                                            <td>{{invoice.invoice_customer_po}}</td>
+                                            <td>{{invoice.invoice_delivery_due_date|date:"M d, Y"}} :
+                                              {% if invoice.invoice_delivery_due_date_status == "Pending" %}
+                                              <span class="text-danger theme-bg-danger">{{invoice.invoice_delivery_due_date_status}} </span></td>
+                                              {% else %}  <span class="text-success theme-bg-success">{{invoice.invoice_delivery_due_date_status}} </span></td>{% endif %}
+
+
+                                            <td>{{invoice.invoice_mra_date|date:"M d, Y"}} : 
+                                              {% if invoice.invoice_mra_date_status == 'Pending' %}
+                                              <span class="text-danger theme-bg-danger">{{invoice.invoice_mra_date_status}} </span></td>
+                                              {% else %}  <span class="text-success theme-bg-success">{{invoice.invoice_mra_date_status}} </span></td>{% endif %}
+
+
+                                            <td>{{invoice.invoice_pac_date|date:"M d, Y"}} :
+                                              {% if invoice.invoice_pac_date_status == 'Pending' %}
+                                              <span class="text-danger theme-bg-danger">{{invoice.invoice_pac_date_status}} </span></td>
+                                              {% else %}  <span class="text-success theme-bg-success">{{invoice.invoice_pac_date_status}}</span></td>{% endif %}
+
+
+
+                                            <td>{{invoice.invoice_finance_date|date:"M d, Y"}} : 
+                                              {% if invoice.invoice_finance_date_status == 'Pending' %}
+                                              <span class="text-danger theme-bg-danger">{{invoice.invoice_finance_date_status}} </span></td>
+                                              {% else %}  <span class="text-success theme-bg-success">{{invoice.invoice_finance_date_status}} </span></td>{% endif %}
+                                           
+                                            <td class="text-right">
+                                            
+                                              <button type="button" class="btn btn-success"><a href="{% url 'view_invoice' invoice.invoice_id %}" style="text-decoration:none" class="text-white">More info</a></button>
+                                              {% comment %} <button type="button" class="btn btn-success" href="{% url 'view_invoice' invoice.invoice_id %}" data-bs-toggle="modal" data-bs-target="#myModalInvoiceInfo{{invoice.invoice_id}}" style="cursor:help">More info</button> {% endcomment %}
+                                              <button type="button" class="btn btn-success"><a href="{% url 'edit_invoice' invoice.invoice_id %}" style="text-decoration:none" class="text-white">Edit</a></button>
+                                              <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#myModaldeleteinvoice{{invoice.invoice_id}}">Delete</button>
+                                              <!-- Modal action here for info -->
+                                              
+                                              <div class="modal fade bd-example-modal-lg" id="myModaldeleteinvoice{{invoice.invoice_id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <h5 class="modal-title">{{invoice.invoice_id}}</h5><hr>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        <p>Are you sure you want to delete {{invoice.invoice_customer_po}} ? </p>
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <form action="{%url 'delete_invoice' invoice.invoice_id %}" method="POST">
+                                                          {% csrf_token %}
+                                                          <input type="submit" class="btn btn-primary" value="Delete"> 
+                                                        </form>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+
+                                                <div class="modal fade bd-example-modal-lg" id="myModalInvoiceInfo{{invoice.invoice_id}}" tabindex="-1" aria-labelledby="myModalLabel1" aria-hidden="true">
+                                                  <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header text-center">
+                                                        <h4 class="modal-title ">Customer PO Number: {{invoice.invoice_customer_po}}</h4 ><hr>
+                                                      </div>
+                                                      <div class="modal-body text-left empinfo">
+                                                         <ul class="list-unstyled">
+                                                              {% comment %} <li class="text-center"><img src="/media/{{employee.employee_photo}}" class="emppp"></li> {% endcomment %}
+                                                              <li><b>Order Quantity:</b> {{invoice.invoice_order_quantity}}</li>
+                                                              <li><b>FOC %:</b> {{invoice.invoice_foc_percentage}}</li>
+                                                              <li><b>FOC Quantity:</b> {{invoice.invoice_foc_quantity}}</li>
+                                                              {% comment %} <li class="text-danger"><b>Passport Expiry:</b> {{employee.employee_passport_exp}}</li> {% endcomment %}
+                                                              <li><b>Unit Price:</b> {{invoice.invoice_unit_price}}</li>
+                                                              <li><b>Net Value:</b> {{invoice.invoice_net_value}}</li>
+                                                              <li><b>Delviery Due Date:</b> {{invoice.invoice_delivery_due_date|date:"M d, Y"}}</li>
+                                                              <li><b>Invoice Number:</b> {{invoice.invoice_number}}</li>
+                                                              <li><b>Invoice Issue Date:</b> {{invoice.invoice_issue_date|date:"M d, Y"}}</li>
+                                                              <li><b>MRA Date:</b> {{invoice.invoice_mra_date|date:"M d, Y"}}</li>
+                                                              <li><b>PAC Date:</b> {{invoice.invoice_pac_date|date:"M d, Y"}}</li>
+                                                              <li><b>Finance Date:</b> {{invoice.invoice_finance_date|date:"M d, Y"}}</li>
+                                                              <li><b>Supporting Document #1:</b> <a href="/media/{{invoice.invoice_document_0}}" target="_blank">{{invoice.invoice_document_0}}</a></li>
+                                                              <li><b>Supporting Document #2:</b> <a href="/media/{{invoice.invoice_document_1}}" target="_blank">{{invoice.invoice_document_1}}</a></li>
+                                                              <li><b>Supporting Document #3:</b> <a href="/media/{{invoice.invoice_document_2}}" target="_blank">{{invoice.invoice_document_2}}</a></li>
+                                                              <li><b>Supporting Document #4:</b> <a href="/media/{{invoice.invoice_document_3}}" target="_blank">{{invoice.invoice_document_3}}</a></li>
+                                                              <li><b>Supporting Document #5:</b> <a href="/media/{{invoice.invoice_document_4}}" target="_blank">{{invoice.invoice_document_4}}</a></li>
+
+                                                          </ul> 
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                  </table>
+                            </div>
+                          </p>
+                        </div>
+                    </div>
+                    {% else %}
+                     <h5 class="alert alert-primary ms-4 me-4">No Records Found</h5> 
+                    {% endif %}
+                </div>
+            </div>
+{% endblock  %}
